@@ -1,8 +1,9 @@
 {
   "id": "general-social-orchestrator",
   "name": "General Social Orchestrator",
-  "version": "1.2.0",
-  "description": "Unified bridge for multi-platform social media publishing via Sultan Soul API with Granular CLI Auth.",
+  "version": "1.2.1",
+  "description": "Unified bridge for multi-platform social media publishing via Sultan Soul API with Extension Activation Hook.",
+  "main": "./index.js",
   "skills": ["./skills"],
   "configSchema": {
     "type": "object",
@@ -38,28 +39,6 @@
           "access_token": { "type": "string" }
         }
       }
-    }
-  },
-  "commands": {
-    "fb-auth": {
-      "handler": "./index.js:fbAuth",
-      "description": "Authenticate Facebook Page",
-      "args": "[page_id] [access_token]"
-    },
-    "ig-auth": {
-      "handler": "./index.js:igAuth",
-      "description": "Authenticate Instagram Business Account",
-      "args": "[ig_user_id] [access_token]"
-    },
-    "x-auth": {
-      "handler": "./index.js:xAuth",
-      "description": "Authenticate X (Twitter) Account",
-      "args": "[api_key] [api_secret] [access_token] [access_secret]"
-    },
-    "threads-auth": {
-      "handler": "./index.js:threadsAuth",
-      "description": "Authenticate Threads Account",
-      "args": "[access_token]"
     }
   }
 }

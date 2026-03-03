@@ -1,103 +1,84 @@
-import fs from 'fs';
-import path from 'path';
+import { Extension, Command } from 'openclaw';
 
-/**
- * Update plugin configuration in openclaw.json
- * This is a helper for CLI commands
- */
-async function updateConfig(pluginContext, newConfig) {
-    const currentConfig = pluginContext.config || {};
-    const mergedConfig = { ...currentConfig, ...newConfig };
-    
-    // In OpenClaw plugin environment, we use the plugin context to save
-    if (pluginContext.saveConfig) {
-        await pluginContext.saveConfig(mergedConfig);
-    } else {
-        throw new Error('Plugin context does not support saveConfig');
-    }
-}
+export default class GeneralSocialOrchestrator extends Extension {
+    async onload() {
+        // 1. Facebook Auth Command
+        this.registerCommand(
+            new Command('fb-auth')
+                .description('Authenticate Facebook Page')
+                .argument('<page_id>', 'Facebook Page ID')
+                .argument('<access_token>', 'Page Access Token')
+                .action(async (pageId, accessToken) => {
+                    await this.updatePlatformConfig('fb', {
+                        page_id: pageId,
+                        access_token: accessToken
+                    });
+                    console.log('✅ Facebook configuration updated successfully.');
+                })
+        );
 
-export async function fbAuth(args, context) {
-    const [pageId, accessToken] = args;
-    if (!pageId || !accessToken) {
-        console.error('Usage: openclaw fb-auth <PAGE_ID> <ACCESS_TOKEN>');
-        process.exit(1);
-    }
+        // 2. Instagram Auth Command
+        this.registerCommand(
+            new Command('ig-auth')
+                .description('Authenticate Instagram Business Account')
+                .argument('<ig_user_id>', 'Instagram Business ID')
+                .argument('<access_token>', 'Page Access Token (with IG permissions)')
+                .action(async (igUserId, accessToken) => {
+                    await this.updatePlatformConfig('ig', {
+                        ig_user_id: igUserId,
+                        access_token: accessToken
+                    });
+                    console.log('✅ Instagram configuration updated successfully.');
+                })
+        );
 
-    try {
-        await updateConfig(context, {
-            fb: {
-                page_id: pageId,
-                access_token: accessToken
-            }
-        });
-        console.log('✅ Facebook configuration updated successfully.');
-    } catch (error) {
-        console.error('❌ Failed to update Facebook configuration:', error.message);
-        process.exit(1);
-    }
-}
+        // 3. X (Twitter) Auth Command
+        this.registerCommand(
+            new Command('x-auth')
+                .description('Authenticate X (Twitter) Account')
+                .argument('<api_key>', 'API Key')
+                .argument('<api_secret>', 'API Key Secret')
+                .argument('<access_token>', 'Access Token')
+                .argument('<access_secret>', 'Access Token Secret')
+                .action(async (apiKey, apiSecret, accessToken, accessSecret) => {
+                    await this.updatePlatformConfig('x', {
+                        api_key: apiKey,
+                        api_secret: apiSecret,
+                        access_token: accessToken,
+                        access_secret: accessSecret
+                    });
+                    console.log('✅ X (Twitter) configuration updated successfully.');
+                })
+        );
 
-export async function igAuth(args, context) {
-    const [igUserId, accessToken] = args;
-    if (!igUserId || !accessToken) {
-        console.error('Usage: openclaw ig-auth <INSTAGRAM_ID> <ACCESS_TOKEN>');
-        process.exit(1);
-    }
-
-    try {
-        await updateConfig(context, {
-            ig: {
-                ig_user_id: igUserId,
-                access_token: accessToken
-            }
-        });
-        console.log('✅ Instagram configuration updated successfully.');
-    } catch (error) {
-        console.error('❌ Failed to update Instagram configuration:', error.message);
-        process.exit(1);
-    }
-}
-
-export async function xAuth(args, context) {
-    const [apiKey, apiSecret, accessToken, accessSecret] = args;
-    if (!apiKey || !apiSecret || !accessToken || !accessSecret) {
-        console.error('Usage: openclaw x-auth <API_KEY> <API_SECRET> <ACCESS_TOKEN> <ACCESS_SECRET>');
-        process.exit(1);
-    }
-
-    try {
-        await updateConfig(context, {
-            x: {
-                api_key: apiKey,
-                api_secret: apiSecret,
-                access_token: accessToken,
-                access_secret: accessSecret
-            }
-        });
-        console.log('✅ X (Twitter) configuration updated successfully.');
-    } catch (error) {
-        console.error('❌ Failed to update X configuration:', error.message);
-        process.exit(1);
-    }
-}
-
-export async function threadsAuth(args, context) {
-    const [accessToken] = args;
-    if (!accessToken) {
-        console.error('Usage: openclaw threads-auth <ACCESS_TOKEN>');
-        process.exit(1);
+        // 4. Threads Auth Command
+        this.registerCommand(
+            new Command('threads-auth')
+                .description('Authenticate Threads Account')
+                .argument('<access_token>', 'Threads Access Token')
+                .action(async (accessToken) => {
+                    await this.updatePlatformConfig('threads', {
+                        access_token: accessToken
+                    });
+                    console.log('✅ Threads configuration updated successfully.');
+                })
+        );
     }
 
-    try {
-        await updateConfig(context, {
-            threads: {
-                access_token: accessToken
-            }
-        });
-        console.log('✅ Threads configuration updated successfully.');
-    } catch (error) {
-        console.error('❌ Failed to update Threads configuration:', error.message);
-        process.exit(1);
+    /**
+     * Helper to update specific platform config without losing other data
+     */
+    async updatePlatformConfig(platform, credentials) {
+        const currentConfig = this.config || {};
+        const newConfig = {
+            ...currentConfig,
+            [platform]: credentials
+        };
+        
+        if (this.saveConfig) {
+            await this.saveConfig(newConfig);
+        } else {
+            throw new Error('Plugin context does not support saveConfig');
+        }
     }
 }
