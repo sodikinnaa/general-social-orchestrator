@@ -32,8 +32,8 @@ try {
 
 async function run() {
     try {
-        if (!config.fb && !config.x && !config.threads) {
-            console.error('❌ Configuration missing or empty. Please configure the plugin via OpenClaw settings.');
+        if (!config.fb && !config.x && !config.threads && !config.ig) {
+            console.error('❌ Configuration missing or empty. Please configure at least one platform via OpenClaw settings.');
             process.exit(1);
         }
 
@@ -49,6 +49,7 @@ async function run() {
             },
             credentials: {
                 fb: config.fb,
+                ig: config.ig,
                 x: config.x,
                 threads: config.threads
             }

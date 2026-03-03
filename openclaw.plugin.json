@@ -1,7 +1,7 @@
 {
   "id": "general-social-orchestrator",
   "name": "General Social Orchestrator",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "Unified bridge for multi-platform social media publishing via Sultan Soul API with Extension Activation Hook.",
   "main": "./index.js",
   "skills": ["./skills"],
