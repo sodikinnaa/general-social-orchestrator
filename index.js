@@ -1,84 +1,103 @@
-import { Extension, Command } from 'openclaw';
+/**
+ * General Social Orchestrator Plugin
+ */
+const PLUGIN_ID = 'general-social-orchestrator';
 
-export default class GeneralSocialOrchestrator extends Extension {
-    async onload() {
-        // 1. Facebook Auth Command
-        this.registerCommand(
-            new Command('fb-auth')
-                .description('Authenticate Facebook Page')
-                .argument('<page_id>', 'Facebook Page ID')
-                .argument('<access_token>', 'Page Access Token')
-                .action(async (pageId, accessToken) => {
-                    await this.updatePlatformConfig('fb', {
-                        page_id: pageId,
-                        access_token: accessToken
-                    });
-                    console.log('✅ Facebook configuration updated successfully.');
-                })
-        );
+export function activate(api) {
+    // 1. Facebook Auth Command
+    api.registerCli(({ program }) => {
+        program
+            .command('fb-auth <page_id> <access_token>')
+            .description('Authenticate Facebook Page')
+            .action(async (pageId, accessToken) => {
+                await updatePlatformConfig(api, 'fb', {
+                    page_id: pageId,
+                    access_token: accessToken
+                });
+                console.log('✅ Facebook configuration updated successfully.');
+            });
+    }, { commands: ['fb-auth'] });
 
-        // 2. Instagram Auth Command
-        this.registerCommand(
-            new Command('ig-auth')
-                .description('Authenticate Instagram Business Account')
-                .argument('<ig_user_id>', 'Instagram Business ID')
-                .argument('<access_token>', 'Page Access Token (with IG permissions)')
-                .action(async (igUserId, accessToken) => {
-                    await this.updatePlatformConfig('ig', {
-                        ig_user_id: igUserId,
-                        access_token: accessToken
-                    });
-                    console.log('✅ Instagram configuration updated successfully.');
-                })
-        );
+    // 2. Instagram Auth Command
+    api.registerCli(({ program }) => {
+        program
+            .command('ig-auth <ig_user_id> <access_token>')
+            .description('Authenticate Instagram Business Account')
+            .action(async (igUserId, accessToken) => {
+                await updatePlatformConfig(api, 'ig', {
+                    ig_user_id: igUserId,
+                    access_token: accessToken
+                });
+                console.log('✅ Instagram configuration updated successfully.');
+            });
+    }, { commands: ['ig-auth'] });
 
-        // 3. X (Twitter) Auth Command
-        this.registerCommand(
-            new Command('x-auth')
-                .description('Authenticate X (Twitter) Account')
-                .argument('<api_key>', 'API Key')
-                .argument('<api_secret>', 'API Key Secret')
-                .argument('<access_token>', 'Access Token')
-                .argument('<access_secret>', 'Access Token Secret')
-                .action(async (apiKey, apiSecret, accessToken, accessSecret) => {
-                    await this.updatePlatformConfig('x', {
-                        api_key: apiKey,
-                        api_secret: apiSecret,
-                        access_token: accessToken,
-                        access_secret: accessSecret
-                    });
-                    console.log('✅ X (Twitter) configuration updated successfully.');
-                })
-        );
+    // 3. X (Twitter) Auth Command
+    api.registerCli(({ program }) => {
+        program
+            .command('x-auth <api_key> <api_secret> <access_token> <access_secret>')
+            .description('Authenticate X (Twitter) Account')
+            .action(async (apiKey, apiSecret, accessToken, accessSecret) => {
+                await updatePlatformConfig(api, 'x', {
+                    api_key: apiKey,
+                    api_secret: apiSecret,
+                    access_token: accessToken,
+                    access_secret: accessSecret
+                });
+                console.log('✅ X (Twitter) configuration updated successfully.');
+            });
+    }, { commands: ['x-auth'] });
 
-        // 4. Threads Auth Command
-        this.registerCommand(
-            new Command('threads-auth')
-                .description('Authenticate Threads Account')
-                .argument('<access_token>', 'Threads Access Token')
-                .action(async (accessToken) => {
-                    await this.updatePlatformConfig('threads', {
-                        access_token: accessToken
-                    });
-                    console.log('✅ Threads configuration updated successfully.');
-                })
-        );
-    }
+    // 4. Threads Auth Command
+    api.registerCli(({ program }) => {
+        program
+            .command('threads-auth <access_token>')
+            .description('Authenticate Threads Account')
+            .action(async (accessToken) => {
+                await updatePlatformConfig(api, 'threads', {
+                    access_token: accessToken
+                });
+                console.log('✅ Threads configuration updated successfully.');
+            });
+    }, { commands: ['threads-auth'] });
 
-    /**
-     * Helper to update specific platform config without losing other data
-     */
-    async updatePlatformConfig(platform, credentials) {
-        const currentConfig = this.config || {};
-        const newConfig = {
-            ...currentConfig,
-            [platform]: credentials
-        };
-        
-        if (this.saveConfig) {
-            await this.saveConfig(newConfig);
-        } else {
-            throw new Error('Plugin context does not support saveConfig');
-        }
+    // 5. License Setup Command
+    api.registerCli(({ program }) => {
+        program
+            .command('sultan-license <license_key> <device_id>')
+            .description('Setup Sultan Engine License and Device ID')
+            .action(async (licenseKey, deviceId) => {
+                const currentConfig = api.config || {};
+                const newConfig = {
+                    ...currentConfig,
+                    licenseKey: licenseKey,
+                    deviceId: deviceId
+                };
+                if (api.saveConfig) {
+                    await api.saveConfig(newConfig);
+                    console.log('✅ Sultan License and Device ID updated successfully.');
+                } else {
+                    console.warn('⚠️ api.saveConfig not available.');
+                }
+            });
+    }, { commands: ['sultan-license'] });
+}
+
+async function updatePlatformConfig(api, platform, credentials) {
+    const currentConfig = api.config || {};
+    const newConfig = {
+        ...currentConfig,
+        [platform]: credentials
+    };
+    
+    // Check if saveConfig is available on the api object
+    if (api.saveConfig) {
+        await api.saveConfig(newConfig);
+    } else {
+        // Fallback for older SDK or manual update
+        console.warn('⚠️ api.saveConfig not available. Update openclaw.json manually or check SDK version.');
     }
 }
+
+export const register = activate;
+export default activate;
