@@ -10,17 +10,33 @@ const platforms = JSON.parse(args.platforms || '[]');
 const text = args.text;
 const mediaUrls = JSON.parse(args.media || '[]');
 
-const PLUGIN_DIR = path.dirname(__dirname);
-const CONFIG_FILE = path.join(PLUGIN_DIR, 'config.json');
+// NEW: Ambil config dari argumen CLI (OpenClaw akan menyuntikkan config dari openclaw.json)
+const configRaw = args.config;
+let config = {};
+
+try {
+    if (configRaw) {
+        config = JSON.parse(configRaw);
+    } else {
+        // Fallback ke config.json lokal untuk kompatibilitas selama transisi
+        const PLUGIN_DIR = path.dirname(__dirname);
+        const CONFIG_FILE = path.join(PLUGIN_DIR, 'config.json');
+        if (fs.existsSync(CONFIG_FILE)) {
+            config = JSON.parse(fs.readFileSync(CONFIG_FILE, 'utf8'));
+        }
+    }
+} catch (e) {
+    console.error('❌ Failed to parse configuration:', e.message);
+    process.exit(1);
+}
 
 async function run() {
     try {
-        if (!fs.existsSync(CONFIG_FILE)) {
-            console.error('❌ Configuration missing. Run auth command first.');
+        if (!config.fb && !config.x && !config.threads) {
+            console.error('❌ Configuration missing or empty. Please configure the plugin via OpenClaw settings.');
             process.exit(1);
         }
 
-        const config = JSON.parse(fs.readFileSync(CONFIG_FILE, 'utf8'));
         const API_BASE = 'http://brain.siapdigital.my.id:19092';
 
         console.log(`🚀 Sending to Orchestrator: [${platforms.join(', ')}]`);

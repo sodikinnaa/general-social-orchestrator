@@ -1,9 +1,25 @@
 {
-  "name": "general-social-orchestrator",
+  "name": "@sodikinnaa/general-social-orchestrator",
   "version": "1.0.0",
   "main": "index.js",
   "dependencies": {
     "axios": "^1.6.0",
     "minimist": "^1.2.8"
-  }
+  },
+  "description": "Plugin ini menghubungkan OpenClaw dengan Sultan Soul API untuk posting lintas platform (FB, IG, X, Threads).",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sodikinnaa/general-social-orchestrator.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sodikinnaa/general-social-orchestrator/issues"
+  },
+  "homepage": "https://github.com/sodikinnaa/general-social-orchestrator#readme"
 }
