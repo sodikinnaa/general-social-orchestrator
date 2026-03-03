@@ -1,6 +1,6 @@
 {
   "name": "@sodikinnaa/general-social-orchestrator",
-  "version": "1.3.2",
+  "version": "1.4.0",
   "main": "index.js",
   "type": "module",
   "dependencies": {
