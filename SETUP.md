@@ -36,6 +36,13 @@ Kredensial disimpan secara aman di `openclaw.json`. Masukkan kredensial melalui 
 Setelah terinstal, AI akan memiliki akses ke tool:
 `social_orchestrator_publish`
 
+## 📚 Platform Setup Guides
+Untuk detail cara mendapatkan API Key dan Token masing-masing platform, silakan baca panduan di folder `docs/`:
+- [Panduan Facebook](docs/facebook.md)
+- [Panduan Instagram](docs/instagram.md)
+- [Panduan Threads](docs/threads.md)
+- [Panduan X (Twitter)](docs/x.md)
+
 ---
 
 ## 🔗 Technical Bridge Details
