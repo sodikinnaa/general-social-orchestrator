@@ -18,6 +18,11 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "openclaw": {
+    "extensions": [
+      "./openclaw.plugin.json"
+    ]
+  },
   "bugs": {
     "url": "https://github.com/sodikinnaa/general-social-orchestrator/issues"
   },

@@ -1,19 +1,40 @@
-# General Social Orchestrator Plugin
+# General Social Orchestrator Plugin (v1.2.0)
 Plugin ini menghubungkan OpenClaw dengan Sultan Soul API untuk posting lintas platform (FB, IG, X, Threads).
 
-## Perintah Auth (Simulasi):
-Untuk sementara, silakan buat file `config.json` di root plugin ini dengan format:
-```json
-{
-  "fb": { "page_id": "...", "access_token": "..." },
-  "x": { "api_key": "...", "api_secret": "...", "access_token": "...", "access_secret": "..." },
-  "threads": { "access_token": "..." }
-}
-```
-Mendukung tool `social_orchestrator_publish`.
+## 🚀 Universal Granular CLI Auth
+Versi 1.2.0 memperkenalkan perintah autentikasi langsung melalui terminal untuk memudahkan pengaturan kredensial masing-masing platform.
 
-## Dokumentasi Platform
-Detail setup dan penggunaan untuk masing-masing platform dapat dilihat di folder `docs/`:
+### Perintah Autentikasi:
+
+#### 1. Facebook
+```bash
+openclaw fb-auth <PAGE_ID> <ACCESS_TOKEN>
+```
+
+#### 2. Instagram
+```bash
+openclaw ig-auth <INSTAGRAM_ID> <ACCESS_TOKEN>
+```
+
+#### 3. X (Twitter)
+```bash
+openclaw x-auth <API_KEY> <API_SECRET> <ACCESS_TOKEN> <ACCESS_SECRET>
+```
+
+#### 4. Threads
+```bash
+openclaw threads-auth <ACCESS_TOKEN>
+```
+
+Setiap perintah di atas akan memperbarui konfigurasi secara spesifik tanpa mengganggu data platform lain yang sudah tersimpan di `openclaw.json`.
+
+---
+
+## 🛠️ Penggunaan Tool AI
+Mendukung tool `social_orchestrator_publish`. AI akan secara otomatis menggunakan kredensial yang telah Anda atur melalui CLI di atas.
+
+## 📚 Dokumentasi Platform
+Detail setup dan cara mendapatkan Token untuk masing-masing platform dapat dilihat di folder `docs/`:
 - [🚀 Getting Started](docs/getting-started.md)
 - [Facebook Setup & API](docs/facebook.md)
 - [Instagram Setup & API](docs/instagram.md)
