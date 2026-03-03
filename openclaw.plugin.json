@@ -1,0 +1,36 @@
+{
+  "id": "general-social-orchestrator",
+  "name": "General Social Orchestrator",
+  "version": "1.0.0",
+  "description": "Unified bridge for multi-platform social media publishing via Sultan Soul API.",
+  "skills": ["./skills"],
+  "configSchema": {
+    "type": "object",
+    "properties": {
+      "licenseKey": { "type": "string" },
+      "deviceId": { "type": "string" },
+      "fb": {
+        "type": "object",
+        "properties": {
+          "page_id": { "type": "string" },
+          "access_token": { "type": "string" }
+        }
+      },
+      "x": {
+        "type": "object",
+        "properties": {
+          "api_key": { "type": "string" },
+          "api_secret": { "type": "string" },
+          "access_token": { "type": "string" },
+          "access_secret": { "type": "string" }
+        }
+      },
+      "threads": {
+        "type": "object",
+        "properties": {
+          "access_token": { "type": "string" }
+        }
+      }
+    }
+  }
+}
